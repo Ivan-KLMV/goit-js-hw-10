@@ -1,24 +1,25 @@
+import { Notify } from 'notiflix';
+import debounce from 'lodash.debounce';
 import './css/styles.css';
 import './css/country-info.css';
 
-import debounce from 'lodash.debounce';
 const searchInput = document.querySelector('#search-box');
 const DEBOUNCE_DELAY = 300;
 const countriesList = document.querySelector('.country-list');
 const countriyCard = document.querySelector('.country-info');
+
 searchInput.addEventListener(
   'input',
-  debounce(searchCountries, DEBOUNCE_DELAY)
+  debounce(searchCountries, DEBOUNCE_DELAY, { trailing: true })
 );
 
 function searchCountries(evt) {
-  const currentInputValue = evt.target.value;
+  const currentInputValue = evt.target.value.trim();
   if (currentInputValue === '') {
-    // countriesList.innerHTML = '';
-
+    countriesList.innerHTML = '';
+    countriyCard.innerHTML = '';
     return;
   }
-
   fetchCountries(currentInputValue);
 }
 
@@ -35,10 +36,13 @@ function fetchCountries(name) {
     .then(countries => {
       if (countries.length > 10) {
         countriesList.innerHTML = '';
-        return console.log(
+        countriyCard.innerHTML = '';
+
+        return Notify.info(
           'Too many matches found. Please enter a more specific name.'
         );
       } else if (countries.length > 1) {
+        countriyCard.innerHTML = '';
         return createTmpltList(countries);
       }
       countriesList.innerHTML = '';
@@ -47,7 +51,8 @@ function fetchCountries(name) {
       // console.log(countries);
     })
     .catch(error => {
-      console.log('Oops, there is no country with that name');
+      Notify.failure('Oops, there is no country with that name');
+      // console.log('Oops, there is no country with that name');
     });
 }
 
@@ -88,20 +93,3 @@ function countriesTmpltCard(countries) {
     })
     .join('');
 }
-
-{
-  /* <h1 class="card-title"><img src="${country.flags.png}" alt="">
-${country.name.official}</h1>
-<p class="item_title">capital: <span class="item-value">${country.capital}</span></p>
-<p class="item_title">population: <span class="item-value">${country.population}</span></p>
-<ul class="item_title">languages:${languagesListTmplt}</ul>   */
-}
-
-// name.official - повна назва країни
-// capital - столиця
-// population - населення
-// flags.svg - посилання на зображення прапора
-// languages - масив мов
-// https://restcountries.com/v3.1/{service}?fields={field},{field},{field}
-// https://restcountries.com/v3.1/all?fields=name,capital,currencies
-// ?fields=name.official,capital,population,flags.svg,languages
