@@ -1,10 +1,12 @@
 import { Notify } from 'notiflix';
 import debounce from 'lodash.debounce';
+import { fetchCountries } from './js/fetchCountries';
 import './css/styles.css';
 import './css/country-info.css';
+import './css/country-list.css';
 
-const searchInput = document.querySelector('#search-box');
 const DEBOUNCE_DELAY = 300;
+const searchInput = document.querySelector('#search-box');
 const countriesList = document.querySelector('.country-list');
 const countriyCard = document.querySelector('.country-info');
 
@@ -16,61 +18,53 @@ searchInput.addEventListener(
 function searchCountries(evt) {
   const currentInputValue = evt.target.value.trim();
   if (currentInputValue === '') {
-    countriesList.innerHTML = '';
-    countriyCard.innerHTML = '';
+    clearTmplt();
     return;
   }
-  fetchCountries(currentInputValue);
-}
 
-function fetchCountries(name) {
-  fetch(
-    `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
-  )
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+  return fetchCountries(currentInputValue)
     .then(countries => {
       if (countries.length > 10) {
-        countriesList.innerHTML = '';
-        countriyCard.innerHTML = '';
+        clearTmplt();
 
         return Notify.info(
           'Too many matches found. Please enter a more specific name.'
         );
       } else if (countries.length > 1) {
-        countriyCard.innerHTML = '';
+        clearTmplt();
         return createTmpltList(countries);
       }
-      countriesList.innerHTML = '';
 
+      clearTmplt();
       return createTmpltCard(countries);
-      // console.log(countries);
     })
     .catch(error => {
       Notify.failure('Oops, there is no country with that name');
-      // console.log('Oops, there is no country with that name');
     });
 }
 
 function createTmpltList(countries) {
-  countriesList.innerHTML = '';
+  clearTmplt();
   countriesList.insertAdjacentHTML('beforeend', countriesTmpltList(countries));
 }
 
 function createTmpltCard(countries) {
-  countriyCard.innerHTML = '';
+  clearTmplt();
+  countriyCard.classList.add('has-content');
   countriyCard.insertAdjacentHTML('beforeend', countriesTmpltCard(countries));
+}
+
+function clearTmplt() {
+  countriyCard.classList.remove('has-content');
+  countriesList.innerHTML = '';
+  countriyCard.innerHTML = '';
 }
 
 function countriesTmpltList(countries) {
   return countries
     .map(
       country =>
-        `<li><img src="${country.flags.png}" alt="${country.name.official}" srcset="">
+        `<li class="list-item"><img src="${country.flags.png}" alt="${country.name.official}">
   <p>${country.name.official}</p>
 </li>`
     )
@@ -80,16 +74,25 @@ function countriesTmpltList(countries) {
 function countriesTmpltCard(countries) {
   return countries
     .map(country => {
-      const languagesList = Object.values(country.languages);
-      const languagesListTmplt = languagesList
-        .map(item => `<li class="item-value">${item}</li>`)
-        .join('');
       return `<h1 class="card-title"><img src="${country.flags.png}" alt="">
       ${country.name.official}</h1>
-      <p class="item_title">capital: <span class="item-value">${country.capital}</span></p>
-      <p class="item_title">population: <span class="item-value">${country.population}</span></p>
-      <ul class="item_title">languages:${languagesListTmplt}</ul>
-`;
+      <p class="item_title">capital: <span class="item-value">${
+        country.capital
+      }</span></p>
+      <p class="item_title">population: <span class="item-value">${
+        country.population
+      }</span></p>
+      <ul class="item_title">languages:${createLanguagesList(
+        country.languages
+      )}</ul>`;
     })
     .join('');
+}
+
+function createLanguagesList(languages) {
+  const languagesList = Object.values(languages);
+  const languagesListTmplt = languagesList
+    .map(item => `<li class="item-value">${item}</li>`)
+    .join('');
+  return languagesListTmplt;
 }

@@ -1,34 +1,50 @@
+.country-info {
+  gap: 10px;
+  flex-direction: column;
+  display: flex;
+  width: 50%;
+  background-color: #b5b5b510;
+  border-radius: 2px;
+}
+
+.has-content {
+  box-shadow: 1px 4px 6px 0px #00000029, 0px 4px 4px 0px #0000000f,
+    0px 1px 1px 0px #0000001f;
+
+  padding: 15px;
+}
 ul.item_title {
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
- 
+
 .item_title {
-    font-size: 18px;
-    font-weight: 600;
-text-transform: capitalize;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
-.item_title>li:not(:last-child)::after{
-content: ',';
+.item_title > li:not(:last-child)::after {
+  content: ',';
 }
 
-
-.card-title {display: inline-block;
-    margin: 0;
-;
-    font-size: 48px;
+.card-title {
+  display: inline-block;
+  margin: 0;
+  font-size: 48px;
 }
-img {
-    width: 60px;
-    display: inline-block;
+
+.card-title img {
+  width: 60px;
+  display: inline-block;
 }
 
 .item-value {
-    font-size: 16px;
-    font-weight: 400;
+  font-size: 16px;
+  font-weight: 400;
 }

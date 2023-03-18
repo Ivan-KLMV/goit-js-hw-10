@@ -1,0 +1,27 @@
+ul.country-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.list-item {
+  background-color: #b5b5b510;
+  border-radius: 2px;
+  column-gap: 10px;
+  align-items: center;
+  display: flex;
+  width: 50%;
+  padding-left: 5px;
+  padding-right: 5px;
+  /* outline: solid 1px salmon; */
+  margin: 0;
+  box-shadow: 1px 4px 6px 0px #00000029, 0px 4px 4px 0px #0000000f,
+    0px 1px 1px 0px #0000001f;
+}
+
+.list-item img {
+  width: 60px;
+  display: block;
+}
