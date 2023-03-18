@@ -39,6 +39,7 @@ function searchCountries(evt) {
       return createTmpltCard(countries);
     })
     .catch(error => {
+      clearTmplt();
       Notify.failure('Oops, there is no country with that name');
     });
 }
