@@ -2,9 +2,14 @@
   gap: 10px;
   flex-direction: column;
   display: flex;
-  width: 50%;
   background-color: #b5b5b510;
   border-radius: 2px;
+}
+
+@media screen and (min-width: 768px) {
+  .country-info {
+    width: 40%;
+  }
 }
 
 .has-content {
